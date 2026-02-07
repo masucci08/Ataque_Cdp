@@ -23,8 +23,8 @@ El laboratorio se ha desplegado en un entorno virtualizado utilizando **GNS3**, 
 | :--- | :--- | :--- | :--- | :--- |
 | **R1** | e0/0 | 10.20.12.1 | 255.255.255.0 (/24) | N/A |
 | **Sw1** | VLAN 1 | 10.20.12.2 (Gestión) | 255.255.255.0 (/24) | 10.20.12.1 |
-| **gnsattack (Atacante)** | eth0 | 10.20.12.254 | 255.255.255.0 (/24) | 10.20.12.1 |
-| **VPCS (Víctima)** | e0/0 | 10.20.12.50  | 255.255.255.0 (/24) | 10.20.12.1 |
+| **gnsattack (atacante)** | eth0 | 10.20.12.254 | 255.255.255.0 (/24) | 10.20.12.1 |
+| **VPCS (víctima)** | e0/0 | 10.20.12.50  | 255.255.255.0 (/24) | 10.20.12.1 |
 
 
 ### Objetivo del Script
@@ -69,5 +69,6 @@ Tener python3 instalado en la maquina atacante
 ### Medidas de Mitigación
 Para proteger la infraestructura contra estos vectores de ataque, se recomiendan las siguientes configuraciones de endurecimiento (Hardening):
 
-Desabilitar Cdp con el comando en el modo global: 
+ ```bash
+Desabilitar Cdp con el comando en el modo global:
 ### *NO CDP RUN*

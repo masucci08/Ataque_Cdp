@@ -21,10 +21,10 @@ El laboratorio se ha desplegado en un entorno virtualizado utilizando **GNS3**, 
 
 | Dispositivo | Interfaz | Dirección IP | Máscara de Subred | Gateway Predeterminado |
 | :--- | :--- | :--- | :--- | :--- |
-| **Router Gateway** | e0/0 | 10.20.12.1 | 255.255.255.0 (/24) | N/A |
-| **Switch L2** | VLAN 1 | 10.20.12.2 (Gestión) | 255.255.255.0 (/24) | 10.20.12.1 |
-| **Kali Linux (Atacante)** | eth0 | 10.20.12.254 | 255.255.255.0 (/24) | 10.20.12.1 |
-| **PC1 (Víctima)** | eth0 | 10.20.12.50  | 255.255.255.0 (/24) | 10.20.12.1 |
+| **R1** | e0/0 | 10.20.12.1 | 255.255.255.0 (/24) | N/A |
+| **Sw1** | VLAN 1 | 10.20.12.2 (Gestión) | 255.255.255.0 (/24) | 10.20.12.1 |
+| **gnsattack (Atacante)** | eth0 | 10.20.12.254 | 255.255.255.0 (/24) | 10.20.12.1 |
+| **VPCS (Víctima)** | e0/0 | 10.20.12.50  | 255.255.255.0 (/24) | 10.20.12.1 |
 
 
 ### Objetivo del Script

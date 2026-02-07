@@ -45,6 +45,15 @@ El script `cdp.py` tiene como objetivo saturar la tabla de vecinos CDP (Cisco Di
 
 
 
+
+
+<img width="301" height="241" alt="ejecucion scapy" src="https://github.com/user-attachments/assets/1c044ad6-b447-467f-96b8-23d58dcd8e87" />
+
+
+
+
+
+
 <img width="459" height="272" alt="tabla cdlfull" src="https://github.com/user-attachments/assets/5518d5ea-19b6-4283-950f-017930def08e" />
 
 

